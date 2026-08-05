@@ -3,25 +3,85 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SpotQuis – Spieleinladung</title>
-    <meta name="description" content="Du wurdest zu SpotQuis eingeladen.">
+    <title>SpotQuis – Persönliche Einladung</title>
+    <meta name="description" content="Du wurdest zu einer SpotQuis-Gruppe eingeladen.">
+    <meta property="og:title" content="Du wurdest zu SpotQuis eingeladen">
+    <meta property="og:description" content="Öffne deine persönliche Einladung und spiele mit deinen Freunden.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://mschatto.github.io/SpotQuis/Website-GitHub-Pages/assets/og.png">
+    <meta property="og:image:width" content="1536">
+    <meta property="og:image:height" content="1024">
     <link rel="icon" href="../assets/spotquis-icon.jpg">
     <link rel="apple-touch-icon" href="../assets/spotquis-icon.jpg">
-    <link rel="stylesheet" href="../assets/style.css?v=compact-2">
+    <link rel="stylesheet" href="../assets/style.css?v=invite-2">
   </head>
   <body class="invite-page">
     <main class="invite-shell">
       <section class="invite-card">
         <img src="../assets/spotquis-icon.jpg" alt="SpotQuis App-Icon">
-        <p class="eyebrow"><span></span> SpotQuis Invite</p>
-        <h1>Du wurdest eingeladen.</h1>
-        <p>Hier erscheint später deine persönliche Einladung zu einer SpotQuis-Gruppe oder Challenge.</p>
-        <a class="store-button" href="https://apps.apple.com/" target="_blank" rel="noreferrer" aria-label="SpotQuis im App Store öffnen">
-          <span class="apple" aria-hidden="true">&#63743;</span>
-          <span><small>Jetzt laden im</small><strong>App Store</strong></span>
-        </a>
+        <p class="eyebrow"><span></span> Persönliche Einladung</p>
+        <h1>Spiel mit uns!</h1>
+        <p id="invite-description">Öffne diese Einladung in SpotQuis und tritt deiner Gruppe mit dem vorgesehenen Spielerprofil bei.</p>
+
+        <div class="invite-code" id="invite-code" hidden>
+          <small>Dein persönlicher Code</small>
+          <strong id="code-value"></strong>
+        </div>
+
+        <div class="invite-actions">
+          <a class="store-button invite-open-button" id="open-in-app" href="https://apps.apple.com/app/id6793887428">
+            <span class="open-symbol" aria-hidden="true">↗</span>
+            <span><small>Einladung öffnen in</small><strong>SpotQuis</strong></span>
+          </a>
+          <a class="quiet-link" href="https://apps.apple.com/app/id6793887428">SpotQuis im App Store ansehen</a>
+        </div>
+
+        <p class="invite-note">Ist SpotQuis installiert, öffnet sich die App direkt. Andernfalls wirst du automatisch zum App Store weitergeleitet.</p>
         <a class="quiet-link" href="../share/">Mehr über SpotQuis erfahren</a>
       </section>
     </main>
+
+    <script>
+      (() => {
+        const appStoreURL = "https://apps.apple.com/app/id6793887428";
+        const params = new URLSearchParams(window.location.search);
+        const groupCode = (params.get("g") || "").trim();
+        const playerCode = (params.get("p") || "").trim().toUpperCase();
+        const openButton = document.getElementById("open-in-app");
+        let fallbackTimer;
+
+        if (!playerCode) {
+          document.getElementById("invite-description").textContent =
+            "Diese Einladung enthält keinen persönlichen Code. Lade SpotQuis und gib deinen Code anschließend in der App ein.";
+          openButton.href = appStoreURL;
+          openButton.querySelector("small").textContent = "Jetzt laden im";
+          openButton.querySelector("strong").textContent = "App Store";
+          return;
+        }
+
+        document.getElementById("invite-code").hidden = false;
+        document.getElementById("code-value").textContent = playerCode;
+
+        const deepLink = new URL("SpotQuis://join");
+        if (groupCode) deepLink.searchParams.set("g", groupCode);
+        deepLink.searchParams.set("p", playerCode);
+        openButton.href = deepLink.toString();
+
+        const cancelFallback = () => {
+          if (document.hidden && fallbackTimer) {
+            window.clearTimeout(fallbackTimer);
+            fallbackTimer = undefined;
+          }
+        };
+
+        document.addEventListener("visibilitychange", cancelFallback);
+
+        openButton.addEventListener("click", () => {
+          fallbackTimer = window.setTimeout(() => {
+            if (!document.hidden) window.location.assign(appStoreURL);
+          }, 1400);
+        });
+      })();
+    </script>
   </body>
 </html>
