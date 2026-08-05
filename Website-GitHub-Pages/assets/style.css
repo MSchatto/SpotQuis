@@ -72,3 +72,11 @@ footer{padding-bottom:24px}
   .final-cta{padding:24px 20px}
   .invite-card{padding:30px 20px}
 }
+
+.invite-code{margin:0 auto 24px;padding:14px 20px;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:rgba(255,255,255,.08)}
+.invite-code small{display:block;margin-bottom:5px;color:rgba(255,255,255,.65);font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+.invite-code strong{font-size:23px;letter-spacing:.16em}
+.invite-actions{display:grid;justify-items:center;gap:4px}
+.invite-open-button{min-width:250px}
+.open-symbol{font-size:28px;font-weight:800}
+.invite-note{margin:20px auto 0!important;font-size:13px!important;color:rgba(255,255,255,.58)!important}
